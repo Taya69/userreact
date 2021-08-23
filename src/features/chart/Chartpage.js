@@ -9,23 +9,29 @@ import {XYPlot,
   VerticalBarSeries} from 'react-vis';
 
 export const ChartPage = () => {
+  const posts = useSelector(state => state.posts)
   const users = useSelector(state => state.users)
- 
-  const myData = [{angle: 1}, {angle: 5}, {angle: 2}]
+  const arrForChart =[]
+  users.forEach(element => {
+    let y = posts.filter(post => post.userId == element.id).length
+    arrForChart.push({x: element.name, y})    
+  });
+  
+  const divContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center' ,
+    marginTop: '10%'
+  };
 
   return (
-    <section className="posts-list">
+    <section style={divContainerStyle}>
     <XYPlot margin={{bottom: 70}} xType="ordinal" width={300} height={300}>
       <VerticalGridLines />
       <HorizontalGridLines />
       <XAxis tickLabelAngle={-45} />
       <YAxis />
       <VerticalBarSeries
-        data={[
-          {x: 'Apples', y: 10},
-          {x: 'Bananas', y: 5},
-          {x: 'Cranberries', y: 15}
-        ]}
+        data={arrForChart}
       />
     
     </XYPlot>

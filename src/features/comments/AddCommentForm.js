@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { nanoid } from '@reduxjs/toolkit'
 import { commentAdded } from './commentSlice'
+import * as Mui from '@material-ui/core';
 
 export const AddCommentForm = ({postId, onClick}) => {
   const [comment, setComment] = useState('')  
@@ -27,20 +28,20 @@ export const AddCommentForm = ({postId, onClick}) => {
   return (
     <section>
       <h2>Add a comment</h2>
-      <form>
-        <label htmlFor="postTitle">Comment:</label>
-        <input
-          type="text"
-          id="postTitle"
-          name="postTitle"
-          value={comment}
+      <Mui.TextField
+            autoFocus
+            margin="dense"
+            id="title"
+            label="Title of post"            
+            fullWidth
+            value={comment}
           onChange={onCommentChanged}
-        />
+          />     
        
-        <button type="button" onClick={onSaveCommentClicked}>
+        <Mui.Button variant="contained" color="primary" onClick={onSaveCommentClicked}>
           Save comment
-        </button>
-      </form>
+        </Mui.Button>
+
     </section>
   )
 }

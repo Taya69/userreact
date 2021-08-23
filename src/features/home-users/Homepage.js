@@ -1,11 +1,27 @@
 import React, {useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { nanoid } from '@reduxjs/toolkit'
 import { userAdded } from './userSlice'
+import { makeStyles } from '@material-ui/core/styles';
 import * as Mui from '@material-ui/core';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    textAlign: 'center'
+  
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
+
 export const HomePage = () => {
+  const classes = useStyles();
+  const history = useHistory();
   const users = useSelector(state => state.users)
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
@@ -21,23 +37,30 @@ export const HomePage = () => {
    setOpen(false);  
   };
   const handleSubmit = () => {
-    dispatch(userAdded({id: nanoid(), name, password}))
-    setName('');
-    setPassword('');
-    setOpen(false);  
+    if (name && password) {
+      dispatch(userAdded({id: nanoid(), name, password}))
+      setName('');
+      setPassword('');
+      setOpen(false);  
+    }  
   }
-  const renderedUsers = users.map(user => (
-    <article className="post-excerpt" key={user.id}>
-      <h3>{user.name}</h3>   
-      <Link to={`/users/${user.id}`} className="button muted-button">
-        View User
-      </Link> 
-    </article>
+  const handleClickLink = url => {
+    history.push(url)
+  }
+  const renderedUsers = users.map(user => (    
+    <Mui.ListItem button key={user.id} onClick={() => handleClickLink(`/users/${user.id}`)}>
+      <h3 >{user.name}</h3>      
+    </Mui.ListItem>    
   ))
 
+
   return (
-    <section className="posts-list">
+    <div className={classes.root}>
+    <Mui.Grid container spacing={3}>
+      <Mui.Grid item xs={12}>
       <h2>Users</h2>
+      </Mui.Grid>
+      <Mui.Grid item xs={12}>
       <Mui.Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Add user
       </Mui.Button>
@@ -68,7 +91,13 @@ export const HomePage = () => {
           </Mui.Button>
         </Mui.DialogActions>
       </Mui.Dialog>
-      {renderedUsers}
-    </section>
+      <Mui.List>
+         {renderedUsers}
+      </Mui.List>      
+      </Mui.Grid>
+    </Mui.Grid>
+    </div>
+     
+    
   )
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {makeStyles} from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import * as Mui from '@material-ui/core';
 import { useState } from 'react'
@@ -7,8 +7,14 @@ import PropTypes from 'prop-types';
 import { nanoid } from '@reduxjs/toolkit';
 import { postAdded, postRemove } from '../posts/postSlice';
 
-
-export const SingleUserPage = ({ match }) => {  
+const divContainerStyle = {
+  textAlign: 'center' 
+};
+const divBackStyle = {
+  textAlign: 'start' 
+};
+export const SingleUserPage = ({ match }) => { 
+  
   const history = useHistory();
   const dispatch = useDispatch();  
   const postId = useLocation().state    
@@ -43,21 +49,24 @@ const handleClose = (value) => {
 };
 
 const handleSubmit = () => {
-  dispatch(postAdded({id: nanoid(5), title, content, userId}) )
-  setTitle('');
-  setContent('');
-  setOpen(false);  
+  if (title && content) {
+    dispatch(postAdded({id: nanoid(5), title, content, userId}) )
+    setTitle('');
+    setContent('');
+    setOpen(false);  
+  } 
+}
+
+const handleClickLink = url => {
+  history.push(url)
 }
 
 const submitTitle = (event) => {setTitle(event.target.value)}
 const submitContent = (e) => {setContent(e.target.value)}  
 const renderedPosts = posts.map(post => (
-  <article className="post-excerpt" key={post.id}>
-    <h3>{post.title}</h3>   
-    <Link to={`/posts/${post.id}`} className="button muted-button">
-      View post
-    </Link> 
-  </article>
+  <Mui.ListItem button key={post.id} onClick={() => handleClickLink(`/posts/${post.id}`)}>
+      <h3 >{post.title}</h3>      
+    </Mui.ListItem>  
 ))
 
   if (!user) {
@@ -70,12 +79,14 @@ const renderedPosts = posts.map(post => (
   }
 
   return (
-    <section>
-    <button onClick={()=> goBack()}>back</button>
-      <article className="post">
-        <h2>{user.name}</h2>   
-         {renderedPosts}    
-      </article>
+    <div>
+    <Mui.Button  onClick={()=> goBack()} style={divBackStyle}>back</Mui.Button>
+    <div style={divContainerStyle}>    
+    <Mui.Grid container spacing={3}>
+      <Mui.Grid item xs={12}>
+      <h2>{user.name}</h2>
+      </Mui.Grid>
+      <Mui.Grid item xs={12}>
       <Mui.Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Add post
       </Mui.Button>
@@ -106,7 +117,12 @@ const renderedPosts = posts.map(post => (
           </Mui.Button>
         </Mui.DialogActions>
       </Mui.Dialog>
-    
-    </section>
+    </Mui.Grid>
+    <Mui.Grid item xs={12}>
+      {renderedPosts}
+    </Mui.Grid>
+    </Mui.Grid>
+    </div>
+    </div>
   )
 }

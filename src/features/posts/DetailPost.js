@@ -6,6 +6,13 @@ import { useHistory} from 'react-router-dom'
 import { AddCommentForm } from '../comments/AddCommentForm';
 import * as Mui from '@material-ui/core';
 
+const divContainerStyle = {
+  textAlign: 'center' 
+};
+const divBackStyle = {
+  textAlign: 'start' 
+};
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Mui.Slide direction="up" ref={ref} {...props} />;
 });
@@ -49,16 +56,15 @@ export const SinglePagePost = ({ match }) => {
   }
   
 const renderedComments = comments.map(comment => (
-  <article className="post-excerpt" key={comment.id}>
-    <h3>{comment.content}</h3>   
-  
-  </article>))
+  <Mui.ListItem button key={comment.id}>
+  <h3 >{comment.content}</h3>      
+</Mui.ListItem>   ))
 
 
   if (!post) {
     return (    
       <section>
-      <button onClick={()=> goBack()}>back</button>
+      <Mui.Button  onClick={()=> goBack()} style={divBackStyle}>back</Mui.Button>
         <h2>There are no comments</h2>
       </section>
     )
@@ -66,13 +72,19 @@ const renderedComments = comments.map(comment => (
 
   return (post &&
     <section>
-    <button onClick={()=> goBack()}>back</button>
-      <article className="post">
-      <h2>{post.title}</h2>   
-        <h2>{user.name}</h2>
+    <Mui.Button  onClick={()=> goBack()} style={divBackStyle}>back</Mui.Button>
+    <div style={divContainerStyle}>    
+    <Mui.Grid container spacing={3}>
+      <Mui.Grid item xs={12}>
+      <h3>{user.name}</h3>
+      <h2>{post.title}</h2>
+      <p>{post.content}</p>
+      </Mui.Grid>
+      <Mui.Grid item xs={12}>
         <Mui.Button variant="outlined" color="primary" onClick={handleClickOpenRemove}>
         Remove post
       </Mui.Button>
+      
       <Mui.Dialog open={openRemove} onClose={handleCloseRemove} aria-labelledby="form-dialog-title">        
         <Mui.DialogContent> Are you sure you want to remove this post  </Mui.DialogContent>   
          
@@ -85,12 +97,20 @@ const renderedComments = comments.map(comment => (
           </Mui.Button>
         </Mui.DialogActions>
       </Mui.Dialog> 
-        <div style={{paddingTop: '2rem'}}>
-            <label>
-            <input type="checkbox" className="filled-in" value={checked} onChange={() => setCheked(!checked)} />
-              <span>Show comments</span>
-            </label>
-            </div>     
+      </Mui.Grid>
+      <Mui.Grid item xs={12}>   
+      <Mui.FormControlLabel
+        control={
+          <Mui.Checkbox
+        checked={checked}
+        onChange={() => setCheked(!checked)}
+        inputProps={{ 'aria-label': 'primary checkbox' }}
+      />
+        }
+        label="Show/Hide comments"
+      />   
+     
+            
          {checked && renderedComments}
          <AddCommentForm postId={postId} onClick={handleAddComment}/>
          <Mui.Dialog 
@@ -103,7 +123,9 @@ const renderedComments = comments.map(comment => (
          >        
         <Mui.DialogContent> The comment was added </Mui.DialogContent>        
       </Mui.Dialog> 
-      </article>     
+      </Mui.Grid>
+      </Mui.Grid>
+      </div>        
     </section>
   )
 }

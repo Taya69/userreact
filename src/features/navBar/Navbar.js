@@ -1,6 +1,8 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import * as Mui from '@material-ui/core';
+
+
 
 
 
@@ -8,20 +10,17 @@ import { Link } from 'react-router-dom'
 
 
 export const Navbar = () => { 
-
+  const history = useHistory()
+  const handleClickLinkButton = (url) => {
+    history.push(url)
+  }
   return (
-    <nav>
-      <section>
-        <div>
-          <div>
-            <Link to="/">Users</Link>         
-          </div>
-          <div>
-            <Link to="/chart">Chart</Link>         
-          </div>
-        
-        </div>
-      </section>
-    </nav>
+    <Mui.AppBar position="static">
+      <Mui.Toolbar>              
+          <Mui.Button color="inherit" onClick={() => handleClickLinkButton('/')}>Users</Mui.Button>
+          <Mui.Button color="inherit" onClick={() => handleClickLinkButton('/chart')}>Chart</Mui.Button>
+     </Mui.Toolbar>
+</Mui.AppBar>
+   
   )
 }
