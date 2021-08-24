@@ -30,7 +30,8 @@ const postsSlice = createSlice({
       const existingPost = state.find(post => post.id == action.payload)
       if(existingPost) {
       const indexOfPost = state.indexOf(existingPost)    
-      state.splice(indexOfPost, 1)        
+      state.splice(indexOfPost, 1)
+              
       }
     }
   }

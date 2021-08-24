@@ -17,6 +17,7 @@ export const SingleUserPage = ({ match }) => {
   
   const history = useHistory();
   const dispatch = useDispatch();  
+  
   const postId = useLocation().state    
    
   
@@ -30,9 +31,10 @@ export const SingleUserPage = ({ match }) => {
     state.users.find(user => user.id == userId)
 )
 
-// if (postId) {
-//   dispatch(postRemove(postId))  
-// }
+if (postId === localStorage.getItem('post')) {
+  dispatch(postRemove(postId)) 
+  localStorage.removeItem('post')
+}
 
 const posts = useSelector(state => 
   state.posts.filter(post => post.userId == user.id))

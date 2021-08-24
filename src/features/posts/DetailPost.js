@@ -42,7 +42,8 @@ export const SinglePagePost = ({ match }) => {
   const handleCloseRemove = (value) => {
     setOpenRemove(false);  
    };
-   const handleSubmitRemove = () => {  
+   const handleSubmitRemove = () => { 
+    localStorage.setItem('post', postId) 
     history.push(`/users/${user.id}`, postId)
    // dispatch(postRemove(postId))     
     setOpenRemove(false);     
